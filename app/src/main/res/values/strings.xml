@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Pokedex</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="chosen_types">CHOSEN_TYPES</string>
+    <string name="min_attack">MIN_ATTACK</string>
 
 </resources>

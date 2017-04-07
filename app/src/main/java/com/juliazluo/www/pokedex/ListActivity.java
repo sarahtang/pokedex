@@ -1,23 +1,14 @@
 package com.juliazluo.www.pokedex;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 
 public class ListActivity extends AppCompatActivity {
@@ -26,11 +17,14 @@ public class ListActivity extends AppCompatActivity {
     protected ArrayList<Pokedex.Pokemon> pokemonList;
     protected FilteredListAdapter adapter;
     protected Switch layoutSwitch;
+    public Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        intent = getIntent();
+
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.filter_recycler);
         pokemonHandler = new PokemonHandler();
         pokemonList = new ArrayList<>();
@@ -47,7 +41,6 @@ public class ListActivity extends AppCompatActivity {
                 if (isChecked) {
                     recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 4));
 
-
                 } else {
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 }
@@ -59,7 +52,6 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = getIntent();
         boolean randomize = intent.getBooleanExtra("RANDOMIZE", true);
 
         if (randomize) {
@@ -72,7 +64,7 @@ public class ListActivity extends AppCompatActivity {
             pokemonList = pokemonHandler.filter(chosenTypes, minAttack, minDP, minHP);
         }
 
-        Log.i("New list size", pokemonList.size() + "");
+        Log.d("New list size", pokemonList.size() + "");
         adapter.setFilter(pokemonList);
     }
 }

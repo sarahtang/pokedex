@@ -74,7 +74,6 @@ public class PokemonHandler {
     public ArrayList<String> getPokemonTypes() {
         return pokemonTypes;
     }
-
     public ArrayList<Pokedex.Pokemon> getPokemonList() {
         return pokemonList;
     }

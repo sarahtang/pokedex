@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements MultiSpinner.Mult
         dpInput = (EditText) findViewById(R.id.dp_input);
 
 
-        ((ImageButton) findViewById(R.id.filter_btn)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.filter_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int minAttack = 0;
@@ -72,15 +72,15 @@ public class MainActivity extends AppCompatActivity implements MultiSpinner.Mult
                 Log.i("Input", minDP + " " + minHP + " " + minAttack);
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 intent.putExtra("RANDOMIZE", false);
-                intent.putExtra("CHOSEN_TYPES", chosenTypes);
-                intent.putExtra("MIN_ATTACK", minAttack);
+                intent.putExtra(getString(R.string.chosen_types), chosenTypes);
+                intent.putExtra(getString(R.string.min_attack), minAttack);
                 intent.putExtra("MIN_DP", minDP);
                 intent.putExtra("MIN_HP", minHP);
                 startActivity(intent);
             }
         });
 
-        ((ImageButton) findViewById(R.id.random_btn)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.random_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);

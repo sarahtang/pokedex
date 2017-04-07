@@ -3,13 +3,16 @@ package com.juliazluo.www.pokedex;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,6 +25,8 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,9 +40,6 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView name, number, hp, dp, attack, species, types;
     private ImageView image;
     private Button buttonSearchTheWeb;
-    private Bitmap bitmap;
-
-    BarChart barChart;
 
 
     @Override
@@ -53,7 +55,6 @@ public class ProfileActivity extends AppCompatActivity {
         types = (TextView) findViewById(R.id.profile_types);
         image = (ImageView) findViewById(R.id.profile_image);
         buttonSearchTheWeb = (Button) findViewById(R.id.buttonSearchTheWeb);
-
 
         Log.i("started", "this activity");
 
@@ -79,26 +80,36 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
         types.setText(typeNames);
-        Glide.with(this)
-                .load("http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemon.number + ".png")
-                .into(image);
 
-        //PALETTE
-        /*
-        bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            public void onGenerated(Palette p) {
-                int darkVibrant = p.getDarkVibrantColor(Integer.parseInt("c1292e", 16));
-                findViewById(R.id.activity_profile).setBackgroundColor(Color.parseColor(Integer.toHexString(darkVibrant).substring(1)));
-
+        AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                Display display = getWindowManager().getDefaultDisplay();
+                int width = display.getWidth();
+                int height = display.getHeight();
+                Bitmap bit=null;
+                try {
+                    bit = BitmapFactory.decodeStream((InputStream) new URL("http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemon.number + ".png").getContent());
+                } catch (Exception e) {}
+                Bitmap sc = Bitmap.createScaledBitmap(bit,width,height,true);
+                return sc;
             }
-        });
-        */
 
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
+                image.setImageBitmap(bitmap);
+                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                    public void onGenerated(Palette p) {
+                        int darkVibrant = p.getDarkVibrantColor(Integer.parseInt("c1292e", 16));
+                        findViewById(R.id.activity_profile).setBackgroundColor(darkVibrant);
 
+                    }
+                });
+            }
+        };
 
-
+        asyncTask.execute();
 
         buttonSearchTheWeb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,34 +121,5 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        //barchart stuff here
-        /*
-        barChart = (BarChart) findViewById(R.id.bargraph);
-
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-        barEntries.add(new BarEntry(Float.parseFloat("" + number.getText()), 0));
-        barEntries.add(new BarEntry(Float.parseFloat(("" + attack.getText()).substring(4)), 1));
-        barEntries.add(new BarEntry(Float.parseFloat(("" + dp.getText()).substring(4)), 2));
-
-        BarDataSet dataSet = new BarDataSet(barEntries, "Data");
-
-        ArrayList<BarEntry> labels = new ArrayList<>();
-        labels.add(new BarEntry());
-        labels.add("DP");
-        labels.add("AP");
-
-        BarChart chart = new BarChart(this);
-        setContentView(chart);
-
-        BarData data = new BarData(dataSet);
-
-        chart.setData(data);
-        barChart.setData(data);
-        barChart.setTouchEnabled(true);
-        barChart.setDragEnabled(true);
-        barChart.setScaleEnabled(true);
-        barChart.setPinchZoom(true);
-        barChart.setDoubleTapToZoomEnabled(true);
-        */
     }
 }

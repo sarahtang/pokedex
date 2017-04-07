@@ -10,13 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
 /**
  * Created by julia on 2017-02-14.
+ * MAIN ADAPTER
  */
 
 public class FilteredListAdapter extends RecyclerView.Adapter<FilteredListAdapter.CustomViewHolder> {
@@ -41,16 +40,17 @@ public class FilteredListAdapter extends RecyclerView.Adapter<FilteredListAdapte
     }
 
     @Override
-    public void onBindViewHolder(FilteredListAdapter.CustomViewHolder holder, int position) {
+    public void onBindViewHolder(final FilteredListAdapter.CustomViewHolder holder, int position) {
         final Pokedex.Pokemon pokemon = pokemonList.get(position);
-        //In the onBindViewHolder, you want to set each of the parameters of ComputerCompanies very similiar
-        //to what you did to the layout manager.
-        //can change properties based on position (alternate colors, etc)
+
         holder.nameText.setText(pokemon.name);
         holder.numText.setText(pokemon.number); //Switched from hp to number
+
+
         Glide.with(context)
                 .load("http://assets.pokemon.com/assets/cms2/img/pokedex/full/" + pokemon.number + ".png")
                 .into(holder.imageView);
+
 
         holder.cardViewListHolder.setOnClickListener(new View.OnClickListener() {
             @Override
